@@ -14,6 +14,7 @@
     flex-direction: column;
     gap:25px;
     overflow: auto;
+    z-index: 5000;
 }
 .dashboard-content-header {
     display: flex;
@@ -64,6 +65,12 @@
     font-size: 0.75rem;
     padding: 0.625rem;
 }
+
+.dashboard-content-input:disabled {
+    cursor: no-drop;
+    background-color: lightgray;
+}
+
 table {
     width: 100%;
     margin: auto;
@@ -157,6 +164,8 @@ td span {
     padding: 10px;
     border: 1px solid rgb(240, 242, 245);
     border-radius: 4px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .dashboard-content-form-item {
@@ -196,4 +205,14 @@ td span {
     text-transform: uppercase;
     border: 1px solid #015C92;
     background-color: #015C92;
+    margin: 0 10px;
+}
+
+.dashboard-content-action-svg {
+    cursor: pointer;
+    padding: 5px;
+}
+
+#supplier-form {
+    display: unset;
 }

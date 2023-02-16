@@ -137,3 +137,8 @@
     border: 1px solid #015C92;
     background-color: #015C92;
 }
+
+.dashboard-content-form-action {
+  padding: 1rem 1rem;
+  transform: translateX(40%)
+}

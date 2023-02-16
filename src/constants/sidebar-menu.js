@@ -8,7 +8,7 @@ const sidebar_menu = [
         id: 1,
         icon: DashboardIcon,
         path: '/',
-        title: 'Inicio',
+        title: 'Index',
     },
     // {
     //     id: 2,
@@ -19,8 +19,8 @@ const sidebar_menu = [
     {
         id: 2,
         icon: UserIcon,
-        path: '/usuarios',
-        title: 'Usuarios - Alta, Modificación, Baja',
+        path: '/users',
+        title: 'Users',
     },
     // {
     //     id: 3,
@@ -31,8 +31,8 @@ const sidebar_menu = [
     {
         id: 3,
         icon: ShippingIcon,
-        path: '/proveedor',
-        title: 'Proveedor',
+        path: '/suppliers',
+        title: 'Suppliers',
     }
 ]
 
