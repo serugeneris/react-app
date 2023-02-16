@@ -5,6 +5,6 @@ npm i
 npm start
 ```
 
-<img width="1724" alt="image" src="https://user-images.githubusercontent.com/65874039/217332424-57425c4b-caf4-428a-bdae-f20e3de7493e.png">
-<img width="1723" alt="image" src="https://user-images.githubusercontent.com/65874039/217332475-3d9c3ac8-bf43-48f9-968e-b4d9bc82668d.png">
-<img width="1726" alt="image" src="https://user-images.githubusercontent.com/65874039/217332546-0fd4b9bc-9aa1-4de6-ae5d-291c7c682c15.png">
+![image](https://user-images.githubusercontent.com/65874039/219497593-e6e57671-f20e-458d-b5f5-334d67904ef4.png)
+![image](https://user-images.githubusercontent.com/65874039/219497639-d8b9f1f2-0aec-41c2-8716-4ede320eaea5.png)
+![image](https://user-images.githubusercontent.com/65874039/219497694-7364ccb2-fe65-4b96-831a-4812f5ddc71a.png)
