@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import DashboardHeader from '../../components/DashboardHeader';
 import DataTable from 'react-data-table-component';
 import { HiPencilSquare } from 'react-icons/hi2';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdOutlineCancel } from 'react-icons/md';
+
 
 import { dummyUsersData, dummyUsersColumns } from '../../constants/dummyUsersData';
 
@@ -57,6 +58,20 @@ function downloadCSV(array) {
 
 const Export = ({ onExport }) => <button className="dashbord-content-btn" onClick={e => onExport(e.target.value)}>Export</button>;
 const NewUser = ({ onNewUser }) => <button className="dashbord-content-btn" onClick={() => onNewUser()}>New User</button>;
+const FilterComponent = ({ filterText, onFilter, onClear }) => (
+	<>
+		<input
+			id="search"
+			type="text"
+			placeholder="Filter By Last Name"
+			aria-label="Search Input"
+            // className='dashboard-content-input'
+			value={filterText}
+			onChange={onFilter}
+		/>
+		<MdOutlineCancel onClick={onClear}/>
+	</>
+);
 
 function Users() {
 
@@ -120,7 +135,7 @@ function Users() {
         }
     ];
 
-    const [usuariosData, setUsuariosData] = useState(dummyUsersData);
+    const [usersData, setUsersData] = useState(dummyUsersData);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [activeUser, setActiveUser] = useState({
         id: 0,
@@ -134,11 +149,31 @@ function Users() {
         zipcodes: [],
         urgency: ''
     });
-    const actionsMemo = React.useMemo(() => <div className="admin-actions"><NewUser onNewUser={()=>{openModal()}}></NewUser><Export onExport={() => downloadCSV(usuariosData)} /></div>, []);
+
+    const [filterText, setFilterText] = useState('');
+	const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
+	const filteredItems = usersData.filter(
+		item => item.lastName && item.lastName.toLowerCase().includes(filterText.toLowerCase()),
+	);
+
+	const subHeaderComponentMemo = React.useMemo(() => {
+		const handleClear = () => {
+			if (filterText) {
+				setResetPaginationToggle(!resetPaginationToggle);
+				setFilterText('');
+			}
+		};
+
+		return (
+			<FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+		);
+	}, [filterText, resetPaginationToggle]);
+
+    const actionsMemo = React.useMemo(() => <div className="admin-actions"><NewUser onNewUser={()=>{openModal()}}></NewUser><Export onExport={() => downloadCSV(usersData)} /></div>, []);
 
     const openModal = (rowId = null) => {
         if (rowId) {
-            setActiveUser(usuariosData.find(elem => elem.id === rowId));
+            setActiveUser(usersData.find(elem => elem.id === rowId));
         } else {
             //post to api before updating the state
             setActiveUser({
@@ -161,10 +196,10 @@ function Users() {
         console.log("deleted record")
     }
 
-    const handleUsuariosDataChange = (currentValues) => {
+    const handleUsersDataChange = (currentValues) => {
 
-        setUsuariosData([
-            ...usuariosData.filter(usuario =>
+        setUsersData([
+            ...usersData.filter(usuario =>
                 usuario.id !== currentValues.id
             ),
             currentValues
@@ -181,7 +216,7 @@ function Users() {
                 <Modal
                     setIsOpen={setIsModalOpen}
                     userData={activeUser}
-                    submitHandler={handleUsuariosDataChange}
+                    submitHandler={handleUsersDataChange}
                 />}
             <DashboardHeader />
 
@@ -191,8 +226,10 @@ function Users() {
                 </div>
                 <DataTable
                     columns={columns}
-                    data={usuariosData}
+                    data={filteredItems}
                     actions={actionsMemo}
+                    subHeader
+			        subHeaderComponent={subHeaderComponentMemo}
                 />
             </div>
         </div>
