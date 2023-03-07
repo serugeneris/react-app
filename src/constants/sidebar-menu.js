@@ -10,29 +10,17 @@ const sidebar_menu = [
         path: '/',
         title: 'Index',
     },
-    // {
-    //     id: 2,
-    //     icon: ProductIcon,
-    //     path: '/orders',
-    //     title: 'Orders',
-    // },
     {
         id: 2,
         icon: UserIcon,
         path: '/users',
         title: 'Users',
     },
-    // {
-    //     id: 3,
-    //     icon: UserIcon,
-    //     path: '/reporte',
-    //     title: 'Reportes',
-    // },
     {
         id: 3,
         icon: ShippingIcon,
-        path: '/suppliers',
-        title: 'Suppliers',
+        path: '/providers',
+        title: 'Providers',
     }
 ]
 

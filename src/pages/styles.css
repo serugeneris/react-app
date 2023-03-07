@@ -71,6 +71,22 @@
     background-color: lightgray;
 }
 
+.dashboard-content-select {
+    font-weight: 400;
+    line-height: 1.4em;
+    letter-spacing: 0.009em;
+    box-sizing: border-box;
+    cursor: text;
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    background-color: transparent;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    border: 1px solid hsl(0, 0%, 80%);
+    padding: 5px 16px;
+}
+
 table {
     width: 100%;
     margin: auto;
@@ -160,7 +176,7 @@ td span {
     border-color: #FFFFFF;
 }
 
-.dashboard-content-form {
+.dashboard-content-form-items {
     padding: 10px;
     border: 1px solid rgb(240, 242, 245);
     border-radius: 4px;
@@ -170,6 +186,12 @@ td span {
 
 .dashboard-content-form-item {
     padding: 1rem 1rem;
+    flex: 1 0 40%;  /* flex-grow, flex-shrink, flex-basis */
+}
+
+.dashboard-content-form-item-error {
+    color: red;
+    margin-top: 2px;
 }
 
 .dashboard-content-form input {

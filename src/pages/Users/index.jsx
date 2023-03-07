@@ -3,13 +3,13 @@ import DashboardHeader from '../../components/DashboardHeader';
 import DataTable from 'react-data-table-component';
 import { HiPencilSquare } from 'react-icons/hi2';
 import { MdDelete, MdOutlineCancel } from 'react-icons/md';
+import { apiHost } from '../../constants/api';
 
-
-import { dummyUsersData, dummyUsersColumns } from '../../constants/dummyUsersData';
-
+import { usersColumns } from '../../constants/usersColumns';
 
 import '../styles.css';
 import Modal from '../../components/Modal';
+import { useEffect } from 'react';
 
 // AUX FUNCTIONS TO CSV EXPORT
 
@@ -18,7 +18,7 @@ function convertArrayOfObjectsToCSV(array) {
 
     const columnDelimiter = ',';
     const lineDelimiter = '\n';
-    const keys = Object.keys(dummyUsersColumns);
+    const keys = Object.keys(usersColumns);
 
     result = '';
     result += keys.join(columnDelimiter);
@@ -56,6 +56,31 @@ function downloadCSV(array) {
     link.click();
 }
 
+const getUsers = async () => {
+    const res = await fetch(apiHost + '/provider');
+    const users = await res.json();
+    // console.log(users.data);
+    return users.data;
+}
+
+const createUser = async (userData) => {
+    const res = await fetch(apiHost + '/user', {
+        method: "POST",
+        body: JSON.stringify(userData)
+    })
+
+    return res
+}
+
+const putUser = async (userData) => {
+    const res = await fetch(apiHost + '/user/' + userData.id, {
+        method: "PUT",
+        body: JSON.stringify(userData)
+    })
+
+    return res;
+}
+
 const Export = ({ onExport }) => <button className="dashbord-content-btn" onClick={e => onExport(e.target.value)}>Export</button>;
 const NewUser = ({ onNewUser }) => <button className="dashbord-content-btn" onClick={() => onNewUser()}>New User</button>;
 const FilterComponent = ({ filterText, onFilter, onClear }) => (
@@ -63,7 +88,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
 		<input
 			id="search"
 			type="text"
-			placeholder="Filter By Last Name"
+			placeholder="Search"
 			aria-label="Search Input"
             // className='dashboard-content-input'
 			value={filterText}
@@ -78,17 +103,17 @@ function Users() {
     const columns = [
         {
             name: 'First name',
-            selector: row => row.firstName,
+            selector: row => row.name,
             sortable: true,
         },
         {
             name: 'Last Name',
-            selector: row => row.lastName,
+            selector: row => row.lastname,
             sortable: true,
         },
         {
             name: 'Therapy type',
-            selector: row => row.therapyType,
+            selector: row => row.therapy_type,
             sortable: true,
         },
         {
@@ -103,17 +128,17 @@ function Users() {
         },
         {
             name: 'Current Hours',
-            selector: row => row.currentHours,
+            selector: row => row.current_hs,
             sortable: true,
         },
         {
             name: 'Available Hours',
-            selector: row => row.availableHours,
+            selector: row => row.available_hs,
             sortable: true,
         },
         {
             name: 'Zipcodes',
-            selector: row => row.zipcodes.map(zipcode => zipcode + " "),
+            selector: row => Array.isArray(row) ? row.zip_codes.map(zipcode => zipcode + " ") : '',
         },
         {
             name: 'Urgency',
@@ -135,26 +160,72 @@ function Users() {
         }
     ];
 
-    const [usersData, setUsersData] = useState(dummyUsersData);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [usersData, setUsersData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState({
+        open: false,
+        type: "newUser"
+    });
     const [activeUser, setActiveUser] = useState({
         id: 0,
-        firstName: '',
-        lastName: '',
-        therapyType: '',
+        username: '',
+        password: '',
+        name: '',
+        lastname: '',
+        therapy_type: '',
         esn: '',
         ess: '',
-        currentHours: 0,
-        availableHours: 0,
-        zipcodes: [],
+        current_hs: 0,
+        available_hs: 0,
+        zip_codes: [],
         urgency: ''
     });
 
     const [filterText, setFilterText] = useState('');
 	const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
-	const filteredItems = usersData.filter(
-		item => item.lastName && item.lastName.toLowerCase().includes(filterText.toLowerCase()),
-	);
+	const [filteredItems,setFilteredItems] = useState(usersData);
+
+    useEffect(()=>{
+        (async()=>{
+            const users = await getUsers();
+            for (const user of users.provider) {
+                user.id = user.user_guid;
+                user.ess ? user.ess = "yes" : user.ess = "no";
+                user.esn ? user.esn = "yes" : user.esn = "no";
+            }
+            console.log(users.provider)
+            setUsersData(users.provider)
+        })()
+    },[]);
+
+    useEffect(()=>{
+        setFilteredItems(usersData.filter(
+            item => {
+                for (const property in item) {
+                    // try {
+                        
+                        if (item[property] && typeof item[property] === "string" && item[property].toLowerCase().includes(filterText.toLowerCase())) {
+                            return true;
+                        } else if (item[property] && Array.isArray(item[property])) {
+                            item[property].forEach(elem => {
+                                if (elem.includes(filterText.toLowerCase())) {
+                                    return true;
+                                }
+                            })
+                        }
+                    // } catch(err) {
+                    //     console.log(property)
+                    //     console.log(item[property])
+                    // }
+
+                }
+
+
+                return false;
+            }
+        ));
+    },[usersData, filterText])
+
+
 
 	const subHeaderComponentMemo = React.useMemo(() => {
 		const handleClear = () => {
@@ -169,27 +240,42 @@ function Users() {
 		);
 	}, [filterText, resetPaginationToggle]);
 
-    const actionsMemo = React.useMemo(() => <div className="admin-actions"><NewUser onNewUser={()=>{openModal()}}></NewUser><Export onExport={() => downloadCSV(usersData)} /></div>, []);
+    const actionsMemo = React.useMemo(() => 
+        <div className="admin-actions">
+            <NewUser onNewUser={()=>{openModal()}}></NewUser>
+            <Export onExport={() => downloadCSV(filteredItems)} />
+        </div>
+    , [filteredItems]);
 
     const openModal = (rowId = null) => {
         if (rowId) {
             setActiveUser(usersData.find(elem => elem.id === rowId));
+            setIsModalOpen({
+                open: true,
+                type: "editUser"
+            });
         } else {
             //post to api before updating the state
             setActiveUser({
-                id: Math.random(),
-                firstName: '',
-                lastName: '',
-                therapyType: '',
+                id: 0,
+                username: '',
+                name: '',
+                lastname: '',
+                therapy_type: '',
                 esn: '',
                 ess: '',
-                currentHours: 0,
-                availableHours: 0,
-                zipcodes: [],
+                current_hs: 0,
+                available_hs: 0,
+                zip_codes: [],
                 urgency: ''
             })
+
+            setIsModalOpen({
+                open: true,
+                type: "newUser"
+            });
         }
-        setIsModalOpen(true);
+
     }
 
     const deleteRecord = () => {
@@ -198,22 +284,36 @@ function Users() {
 
     const handleUsersDataChange = (currentValues) => {
 
+        if (isModalOpen.type === "editUser") {
+            const res = putUser(currentValues);
+            //validate response and set erro message if occurs
+        } else if (isModalOpen.type === "newUser"){
+            const res = createUser(currentValues);
+            //validate response and set erro message if occurs
+        }
+
+        currentValues.esn ? currentValues.esn = "yes" : currentValues.esn = "no";
+        currentValues.ess ? currentValues.ess = "yes" : currentValues.ess = "no";
         setUsersData([
-            ...usersData.filter(usuario =>
-                usuario.id !== currentValues.id
+            ...usersData.filter(user =>
+                user.id !== currentValues.id
             ),
             currentValues
         ]
         );
 
-        setIsModalOpen(false);
+        setIsModalOpen({
+            open: false, 
+            type: "editUser"
+        });
 
     }
 
     return (
         <div className='dashboard-content'>
-            {isModalOpen &&
+            {isModalOpen.open &&
                 <Modal
+                    type={isModalOpen.type}
                     setIsOpen={setIsModalOpen}
                     userData={activeUser}
                     submitHandler={handleUsersDataChange}

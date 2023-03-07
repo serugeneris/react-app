@@ -5,7 +5,6 @@ import SideBar from './components/Sidebar';
 import sidebar_menu from './constants/sidebar-menu';
 
 import './App.css';
-import Orders from './pages/Orders';
 import Suppliers from './pages/Suppliers';
 import Users from './pages/Users';
 import Index from './pages/Index';
@@ -20,10 +19,8 @@ function App () {
               <Routes>
                   <Route path="*" element={<Index/>} />
                   <Route exact path="/" element={<Index/>} />
-                  {/* <Route exact path="/orders" element={< Orders/>} /> */}
                   <Route exact path="/users" element={<Users/>} />
-                  {/* <Route exact path="/reporte" element={<div></div>} /> */}
-                  <Route exact path="/suppliers" element={<Suppliers/>} />
+                  <Route exact path="/providers" element={<Suppliers/>} />
               </Routes>
           </div>
       </div>

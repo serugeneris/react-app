@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DashboardHeader from '../../components/DashboardHeader';
 import Select from 'react-select';
 
@@ -63,23 +63,23 @@ function Supplier() {
                 </div>
                 <form className='dashboard-content-form' id="supplier-form">
                     <div className='dashboard-content-form-item' >
-                        <input type="text" className='dashboard-content-input' disabled value={supplierData["lastName"] + ', ' + supplierData["firstName"]}/>
+                        <input type="text" className='dashboard-content-input' disabled value={supplierData["lastname"] + ', ' + supplierData["name"]}/>
                     </div>
                     <div className='dashboard-content-form-item'>
-                            <label htmlFor="currentHours">Current hours with 123T</label>
-                            <input min="0" type="number" id="currentHours" name="currentHours" className='dashboard-content-input' value={supplierData["currentHours"] ?? ""} onChange={handleChange} />
+                            <label htmlFor="current_hs">Current hours with 123T</label>
+                            <input min="0" type="number" id="current_hs" name="current_hs" className='dashboard-content-input' value={supplierData["current_hs"] ?? ""} onChange={handleChange} />
                     </div>
                     <div className='dashboard-content-form-item'>
-                        <label htmlFor="availableHours">Available hours</label>
-                        <input min="0" type="number" id="availableHours" name="availableHours" className='dashboard-content-input' value={supplierData["availableHours"] ?? ""} onChange={handleChange} />
+                        <label htmlFor="available_hs">Available hours</label>
+                        <input min="0" type="number" id="available_hs" name="available_hs" className='dashboard-content-input' value={supplierData["available_hs"] ?? ""} onChange={handleChange} />
                     </div>
                     <div className='dashboard-content-form-item'>
-                        <label htmlFor="zipcodes">Zipcodes</label>
-                        <Select isMulti options={zipcodeOptions} id="zipcodes" name="zipcodes" placeholder="Zipcodes" onChange={(choice) => { handleSelectChange(choice, "zipcodes") }} value={supplierData["zipcodes"] ? supplierData["zipcodes"].map(val => {return {value: val, label: zipcodeOptions.find(elem=>elem.value == val).label}}) : []} className='dashboard-content-select' />
+                        <label htmlFor="zip_codes">Zipcodes</label>
+                        <Select isMulti options={zipcodeOptions} id="zip_codes" name="zip_codes" placeholder="Zipcodes" onChange={(choice) => { handleSelectChange(choice, "zip_codes") }} value={supplierData["zip_codes"] ? supplierData["zip_codes"].map(val => {return {value: val, label: zipcodeOptions.find(elem=>elem.value == val).label}}) : []} />
                     </div>
                     <div className='dashboard-content-form-item'>
                         <label htmlFor="urgency">Urgency</label>
-                        <Select options={urgencyOptions} id="urgency" name="urgency" placeholder="Urgency" onChange={(choice) => { handleSelectChange(choice, "urgency") }} value={supplierData['urgency'] ? {value: supplierData['urgency'], label: urgencyOptions.find(elem=>elem.value == supplierData['urgency']).label} : {value:"", label:""}} className='dashboard-content-select' />
+                        <Select options={urgencyOptions} id="urgency" name="urgency" placeholder="Urgency" onChange={(choice) => { handleSelectChange(choice, "urgency") }} value={supplierData['urgency'] ? {value: supplierData['urgency'], label: urgencyOptions.find(elem=>elem.value == supplierData['urgency']).label} : {value:"", label:""}} />
                     </div>
                     <div className='dashboard-content-form-item'>
                         <button onClick={handleSave} id="save" className="dashbord-content-btn" >Save</button>                       

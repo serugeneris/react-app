@@ -1,14 +1,15 @@
 export const dummyUsersData = [
     {
         id: 1,
-        firstName: 'Juan',
-        lastName: 'Perez',
-        therapyType: 'pt',
-        esn: 'yes',
-        ess: 'yes',
-        currentHours: 2,
-        availableHours: 6,
-        zipcodes: [
+        username: 'juan@example.com',
+        name: 'Juan',
+        lastname: 'Perez',
+        therapy_type: 'pt',
+        esn: true,
+        ess: true,
+        current_hs: 2,
+        available_hs: 6,
+        zip_codes: [
             1000,
             1200
         ],
@@ -16,14 +17,15 @@ export const dummyUsersData = [
     },
     {
         id: 2,
-        firstName: 'Juana',
-        lastName: 'Rodriguez',
-        therapyType: 'ota',
-        esn: 'yes',
-        ess: 'yes',
-        currentHours: 2,
-        availableHours: 6,
-        zipcodes: [
+        username: 'juana@example.com',
+        name: 'Juana',
+        lastname: 'Rodriguez',
+        therapy_type: 'ota',
+        esn: true,
+        ess: true,
+        current_hs: 2,
+        available_hs: 6,
+        zip_codes: [
             1000,
             1200
         ],
@@ -32,6 +34,8 @@ export const dummyUsersData = [
 ];
 
 export const dummyUsersColumns = {
+    username: 'Username',
+    password: 'Password',
     firstName: 'First Name',
     lastName: 'Last Name',
     therapyType: 'Therapy Type',

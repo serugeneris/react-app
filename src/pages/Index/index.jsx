@@ -20,7 +20,7 @@ function Index() {
                             The users will be redirected to the correct page
                         </li>
                         <li className='dashboard-content-form-item' >
-                            Suppliers will only be able to change time availability, urgency and zipcodes
+                            Providers will only be able to change time availability, urgency and zipcodes
                         </li>
                     </ul>
                 </div>
